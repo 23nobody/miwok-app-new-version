@@ -21,6 +21,8 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import static com.example.android.miwok.R.color.category_phrases;
+
 public class PhrasesActivity extends AppCompatActivity {
 
     @Override
@@ -40,7 +42,7 @@ public class PhrasesActivity extends AppCompatActivity {
         words.add(new Word("nine", "wo’e"));
         words.add(new Word("ten", "na’aacha"));
 
-        WordAdapter adapter = new WordAdapter(this, words);
+        WordAdapter adapter = new WordAdapter(this, words, category_phrases);
 
         ListView listView = (ListView) findViewById(R.id.list);
 
