@@ -50,6 +50,7 @@ public class WordAdapter extends ArrayAdapter {
             icon.setImageResource(localWord.getImageResourceId());
         }
 
+
         return listItemView;
     }
 }
