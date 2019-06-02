@@ -1,39 +1,34 @@
-/*
- * Copyright (C) 2016 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.example.android.miwok;
+
 
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
+/**
+ * A simple {@link Fragment} subclass.
+ */
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 import static com.example.android.miwok.R.color.category_phrases;
+public class PhrasesFragment extends Fragment {
 
-public class PhrasesActivity extends AppCompatActivity {
+
+    public PhrasesFragment() {
+        // Required empty public constructor
+    }
     private MediaPlayer mMediaPlayer;
 
-   private AudioManager mAudioManager;
+    private AudioManager mAudioManager;
 
     private Handler handler = new Handler();
     AudioManager.OnAudioFocusChangeListener afChangeListener =
@@ -69,10 +64,10 @@ public class PhrasesActivity extends AppCompatActivity {
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_word);
-        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+       View rootView = inflater.inflate(R.layout.activity_word,container,false);
+        mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
         final ArrayList<Word> words = new ArrayList<Word>();
 
         words.add(new Word("one", "lutti",R.raw.number_two));
@@ -86,9 +81,9 @@ public class PhrasesActivity extends AppCompatActivity {
         words.add(new Word("nine", "wo’e",R.raw.number_one));
         words.add(new Word("ten", "na’aacha",R.raw.number_one));
 
-        WordAdapter adapter = new WordAdapter(this, words, category_phrases);
+        WordAdapter adapter = new WordAdapter(getActivity(), words, category_phrases);
 
-        ListView listView = (ListView) findViewById(R.id.list);
+        ListView listView = (ListView) rootView.findViewById(R.id.list);
 
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -106,7 +101,7 @@ public class PhrasesActivity extends AppCompatActivity {
                 if(result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
 
 
-                    mMediaPlayer = (MediaPlayer) MediaPlayer.create(PhrasesActivity.this, word.getAudioResourceId());
+                    mMediaPlayer = (MediaPlayer) MediaPlayer.create(getActivity(), word.getAudioResourceId());
 
                     mMediaPlayer.start();
 
@@ -115,13 +110,8 @@ public class PhrasesActivity extends AppCompatActivity {
 
             }
         });
-      
-
-
-        }
-    /**
-     * Clean up the media player by releasing its resources.
-     */
+        return rootView;
+    }
     private void releaseMediaPlayer() {
         // If the media player is not null, then it may be currently playing a sound.
         if (mMediaPlayer != null) {
@@ -136,11 +126,10 @@ public class PhrasesActivity extends AppCompatActivity {
             mAudioManager.abandonAudioFocus(afChangeListener);
         }
     }
+
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         releaseMediaPlayer();
-
-
     }
 }
